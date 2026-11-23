@@ -1,0 +1,36 @@
+{
+  "name": "creditsmart-fintech",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Plataforma FinTech de simulaci\u00f3n, an\u00e1lisis de amortizaci\u00f3n y gesti\u00f3n de solicitudes de cr\u00e9dito con React, TypeScript y Firebase.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "firebase": "^11.0.2",
+    "lucide-react": "^0.460.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.2",
+    "react-router-dom": "^6.28.0",
+    "sonner": "^1.7.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.1",
+    "vitest": "^2.1.6"
+  }
+}

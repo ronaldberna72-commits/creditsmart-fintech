@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Verificar rol de administrador en colección /users
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Catálogo de productos crediticios: lectura pública, escritura solo admin
+    match /credit_products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Solicitudes de crédito:
+    // - Cualquier usuario autenticado puede crear su solicitud asociando su userId
+    // - El dueño de la solicitud o un asesor (admin) pueden leerla
+    // - Solo un asesor (admin) puede aprobar/rechazar o eliminar solicitudes
+    match /applications/{applicationId} {
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'Pendiente';
+
+      allow read: if isAuthenticated()
+        && (resource.data.userId == request.auth.uid || isAdmin());
+
+      allow update: if isAdmin() || (
+        isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && resource.data.status == 'Pendiente'
+        && request.resource.data.status == 'Cancelado'
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Perfiles de usuario
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}
